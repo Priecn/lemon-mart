@@ -1,0 +1,6 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$lemonmart-primary: mat-palette($mat-green, 800);
+$lemonmart-accent: mat-palette($mat-lime, 400);
+$lemonmart-app-theme: mat-light-theme($lemonmart-primary, $lemonmart-accent);
+@include angular-material-theme($lemonmart-app-theme);
