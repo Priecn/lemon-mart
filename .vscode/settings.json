@@ -1,9 +1,6 @@
 {
   "editor.tabSize": 2,
-  "editor.rulers": [
-    90,
-    140
-  ],
+  "editor.rulers": [90, 140],
   "files.trimTrailingWhitespace": true,
   "files.autoSave": "onFocusChange",
   "editor.cursorBlinking": "solid",
@@ -20,10 +17,10 @@
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "prettier.printWidth": 90,
-  "prettier.semi": false,
+  "prettier.semi": true,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
-  "typescriptHero.imports.insertSemicolons": false,
+  "typescriptHero.imports.insertSemicolons": true,
   "typescriptHero.imports.multiLineWrapThreshold": 90,
   "typescriptHero.imports.organizeOnSave": true,
   "editor.codeActionsOnSave": {
