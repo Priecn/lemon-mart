@@ -1,6 +1,6 @@
-<div fxLayout="column" fxLayoutAlign="center center">
-  <span class="mat-display-2">Hello, Lemonite!</span>
-  <button mat-raised-button color="primary" routerLink="/manager">
-    Login as Manager
-  </button>
+<div *ngIf="!displayLoginForm(); else loggedIn">
+  <app-login></app-login>
 </div>
+<ng-template #loggedIn>
+  <span class="mat-display-3">Hi {{ username }}, you are a {{ role }}!</span>
+</ng-template>

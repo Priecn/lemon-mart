@@ -3,10 +3,10 @@
   <mat-icon svgIcon="lemon"></mat-icon>
   <a mat-button routerLink="/home"><span class="mat-h2">LemonMart</span></a>
   <span class="flex-spacer"></span>
-  <button mat-mini-fab routerLink="/user/profile" matTooltip="Profile">
+  <button *ngIf="isLoggedIn" mat-mini-fab routerLink="/user/profile" matTooltip="Profile">
     <mat-icon>account_circle</mat-icon>
   </button>
-  <button mat-mini-fab routerLink="/user/logout" matTooltip="Logout">
+  <button *ngIf="isLoggedIn" mat-mini-fab routerLink="/user/logout" matTooltip="Logout">
     <mat-icon>lock_open</mat-icon>
   </button>
 </mat-toolbar>
