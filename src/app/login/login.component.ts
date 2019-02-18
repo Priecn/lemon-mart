@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
+import { Role } from '../auth/role.enum';
+import { UiService } from '../common/ui.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private uiService: UiService
   ) {
     route.paramMap.subscribe(params => (this.redirectUrl = params.get('redirectUrl')));
   }
@@ -38,24 +41,34 @@ export class LoginComponent implements OnInit {
   }
 
   async login(submittedForm: FormGroup) {
+    this.uiService.showToast('Authenticating! Please wait...');
     this.authService
       .login(submittedForm.value.email, submittedForm.value.password)
       .subscribe(
         authStatus => {
           if (authStatus.isAuthenticated) {
-            console.log(authStatus.AUTHORITIES[0] === 'ROLE_USER');
-            if (authStatus.AUTHORITIES[0].toUpperCase() === 'ROLE_USER') {
-              this.router.navigate(['user']);
-            } else if (authStatus.AUTHORITIES[0].toUpperCase() === 'ROLE_MANAGER') {
-              this.router.navigate(['manager']);
-            } else if (authStatus.AUTHORITIES[0].toUpperCase() === 'ROLE_CASHIER') {
-              this.router.navigate(['pos']);
-            } else {
-              this.router.navigate(['inventory']);
-            }
+            this.router.navigate([
+              this.redirectUrl || this.getNavigationUrl(authStatus.role),
+            ]);
+            this.uiService.showToast(
+              `Hi, ${authStatus.sub}! (${authStatus.AUTHORITIES[0].split('_')[1]})`
+            );
           }
         },
         error => (this.loginError = error)
       );
+  }
+
+  private getNavigationUrl(role: Role): string {
+    switch (role) {
+      case Role.User:
+        return 'user';
+      case Role.Manager:
+        return 'manager';
+      case Role.Cashier:
+        return 'pos';
+      case Role.Clerk:
+        return 'inventory';
+    }
   }
 }

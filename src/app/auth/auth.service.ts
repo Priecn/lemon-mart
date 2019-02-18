@@ -6,12 +6,15 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 import { transformError } from '../common/common';
+import { CacheService } from './cache/cache.service';
+import { Role } from './role.enum';
 
 // Interfaces used for Auth
 
 export interface IAuthStatus {
   isAuthenticated: boolean;
   AUTHORITIES: string[];
+  role: Role;
   sub: string;
   iat: number;
   exp: number;
@@ -24,6 +27,7 @@ interface IServerAuthResponse {
 const defaultAuthStatus = {
   isAuthenticated: false,
   AUTHORITIES: null,
+  role: Role.None,
   sub: null,
   iat: null,
   exp: null,
@@ -32,13 +36,15 @@ const defaultAuthStatus = {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService extends CacheService {
   public authStatus = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
 
   public authProvider: any;
 
   constructor(private http: HttpClient) {
+    super();
     this.authProvider = this.httpAuthProvider;
+    this.authStatus.subscribe(authStatus => this.setItem('authStatus', authStatus));
   }
 
   private httpAuthProvider(
@@ -55,9 +61,14 @@ export class AuthService {
     this.logout();
 
     const loginResponse = this.authProvider(email, password).pipe(
-      tap((value: IServerAuthResponse) => console.log(decode(value.token))),
-      map((value: IServerAuthResponse) => decode(value.token) as IAuthStatus),
-      tap((value: IAuthStatus) => (value.isAuthenticated = true)),
+      map((value: IServerAuthResponse) => {
+        this.setToken(value.token);
+        return decode(value.token) as IAuthStatus;
+      }),
+      tap((value: IAuthStatus) => {
+        value.isAuthenticated = true;
+        value.role = this.setRole(value.AUTHORITIES[0]);
+      }),
       catchError(transformError)
     );
 
@@ -72,6 +83,36 @@ export class AuthService {
   }
 
   public logout() {
+    this.clearToken();
     this.authStatus.next(defaultAuthStatus);
+  }
+
+  private setToken(jwt: string) {
+    this.setItem('jwt', jwt);
+  }
+
+  private getDecodedToken(): IAuthStatus {
+    return decode(this.getItem('jwt'));
+  }
+
+  getToken(): string {
+    return this.getItem('jwt') || '';
+  }
+
+  private clearToken() {
+    this.removeItem('jwt');
+  }
+
+  private setRole(authority: string): Role {
+    if (authority.toUpperCase() === 'ROLE_USER') {
+      return Role.User;
+    }
+    if (authority.toUpperCase() === 'ROLE_MANAGER') {
+      return Role.Manager;
+    }
+    if (authority.toUpperCase() === 'ROLE_CASHIER') {
+      return Role.Cashier;
+    }
+    return Role.Clerk;
   }
 }

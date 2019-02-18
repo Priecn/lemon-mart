@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MediaObserver } from '@angular/flex-layout';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -15,7 +16,8 @@ export class AppComponent implements OnInit {
   constructor(
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
-    private authService: AuthService
+    private authService: AuthService,
+    public media: MediaObserver
   ) {
     iconRegistry.addSvgIcon(
       'lemon',
@@ -24,8 +26,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.authStatus.subscribe(
-      authStatus => (this.isLoggedIn = authStatus.isAuthenticated)
-    );
+    this.authService.authStatus.subscribe(authStatus => {
+      setTimeout(() => {
+        this.isLoggedIn = authStatus.isAuthenticated;
+      }, 0);
+    });
   }
 }

@@ -1,14 +1,44 @@
-<mat-toolbar color="primary" fxLayoutGap="8px">
-  <button mat-icon-button><mat-icon>menu</mat-icon></button>
-  <mat-icon svgIcon="lemon"></mat-icon>
-  <a mat-button routerLink="/home"><span class="mat-h2">LemonMart</span></a>
-  <span class="flex-spacer"></span>
-  <button *ngIf="isLoggedIn" mat-mini-fab routerLink="/user/profile" matTooltip="Profile">
-    <mat-icon>account_circle</mat-icon>
-  </button>
-  <button *ngIf="isLoggedIn" mat-mini-fab routerLink="/user/logout" matTooltip="Logout">
-    <mat-icon>lock_open</mat-icon>
-  </button>
-</mat-toolbar>
+<div class="app-container">
+  <mat-toolbar
+    color="primary"
+    fxLayoutGap="8px"
+    class="app-toolbar"
+    [class.app-is-mobile]="media.isActive('xs')"
+  >
+    <button mat-icon-button *ngIf="isLoggedIn" (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a mat-button routerLink="/home">
+      <mat-icon svgIcon="lemon"></mat-icon><span class="mat-h2">LemonMart</span></a
+    >
+    <span class="flex-spacer"></span>
+    <button
+      *ngIf="isLoggedIn"
+      mat-mini-fab
+      routerLink="/user/profile"
+      matTooltip="Profile"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <button *ngIf="isLoggedIn" mat-mini-fab routerLink="/user/logout" matTooltip="Logout">
+      <mat-icon>lock_open</mat-icon>
+    </button>
+  </mat-toolbar>
 
-<router-outlet></router-outlet>
+  <mat-sidenav-container
+    class="app-sidenav-container"
+    [style.marginTop.px]="media.isActive('xs') ? 56 : 0"
+  >
+    <mat-sidenav
+      #sidenav
+      [mode]="media.isActive('xs') ? 'over' : 'side'"
+      [fixedInViewport]="media.isActive('xs')"
+      fixedTopGap="56"
+    >
+      <app-navigation-menu></app-navigation-menu>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet class="app-container"></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
