@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon>account_circle</mat-icon>
+    </div>
+    <mat-card-title>{{ currentUser.fullName }}</mat-card-title>
+    <mat-card-subtitle>{{ currentUser.role }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <span class="mat-input bold">Username</span>
+    </p>
+    <p>{{ currentUser.username }}</p>
+    <p>
+      <span class="mat-input bold">E-mail</span>
+    </p>
+    <p>{{ currentUser.email }}</p>
+  </mat-card-content>
+  <mat-card-actions *ngIf="!this.user">
+    <button mat-button mat-raised-button>Edit</button>
+  </mat-card-actions>
+</mat-card>

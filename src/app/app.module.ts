@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './material.module';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SharedComponentModule } from './shared-component/shared-component.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     FlexLayoutModule,
     HttpClientModule,
     ReactiveFormsModule,
+    SharedComponentModule,
   ],
   providers: [
     UiService,

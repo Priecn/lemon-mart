@@ -1,3 +1,132 @@
-<p>
-  profile works!
-</p>
+<mat-toolbar color="accent">
+  <h5>User Profile</h5>
+</mat-toolbar>
+
+<mat-horizontal-stepper #stepper="matHorizontalStepper">
+  <mat-step [stepControl]="userForm">
+    <form [formGroup]="userForm">
+      <ng-template matStepLabel>Account Information</ng-template>
+      <div class="stepContent">
+        <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
+          <mat-form-field fxFlex="40%">
+            <input matInput placeholder="Username" formControlName="username" />
+            <mat-error *ngIf="userForm.get('username').hasError('required')">
+              Username is required.
+            </mat-error>
+            <mat-error *ngIf="userForm.get('username').hasError('minlength')">
+              Username must be at least 5 characters.
+            </mat-error>
+            <mat-error *ngIf="userForm.get('username').hasError('maxlength')">
+              Username must be at most 20 characters.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="40%">
+            <input matInput placeholder="Email" formControlName="email" />
+            <mat-hint>Only manager can update your e-mail.</mat-hint>
+            <mat-error *ngIf="userForm.get('email').hasError('required')">
+              Email is required.
+            </mat-error>
+            <mat-error *ngIf="userForm.get('email').hasError('email')">
+              Please enter valid email.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayout.lt-sm="column" class="margin-top" fxLayoutGap="10px">
+          <div fxFlex>
+            <mat-label class="mat-body-1">
+              Role
+            </mat-label>
+            <mat-radio-group formControlName="role">
+              <mat-radio-button style="margin-right: 10px" value="none">
+                <span class="mat-body-1">None</span>
+              </mat-radio-button>
+              <mat-radio-button style="margin-right: 10px" value="user">
+                <span class="mat-body-1">User</span>
+              </mat-radio-button>
+              <mat-radio-button style="margin-right: 10px" value="cashier">
+                <span class="mat-body-1">Cashier</span>
+              </mat-radio-button>
+              <mat-radio-button style="margin-right: 10px" value="clerk">
+                <span class="mat-body-1">Clerk</span>
+              </mat-radio-button>
+              <mat-radio-button style="margin-right: 10px" value="manager">
+                <span class="mat-body-1">Manager</span>
+              </mat-radio-button>
+            </mat-radio-group>
+            <mat-error
+              *ngIf="
+                userForm.get('role').hasError('required') && userForm.get('role').touched
+              "
+            >
+              <span class="mat-caption">Role is required</span>
+            </mat-error>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row" class="margin-top flex-spacer">
+        <div *ngIf="userError" class="mat-caption error">
+          {{ userError }}
+        </div>
+        <button mat-raised-button matStepperNext color="accent">
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="userForm">
+    <form [formGroup]="userForm">
+      <ng-template matStepLabel>Basic Information</ng-template>
+      <div class="stepContent">
+        <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
+          <mat-form-field fxFlex="40%">
+            <input matInput placeholder="First Name" formControlName="firstName" />
+            <mat-error *ngIf="userForm.get('firstName').hasError('required')">
+              First Name is required.
+            </mat-error>
+            <mat-error *ngIf="userForm.get('firstName').hasError('minlength')">
+              First Name must be at least 2 characters.
+            </mat-error>
+            <mat-error *ngIf="userForm.get('firstName').hasError('maxlength')">
+              First Name must be at most 50 characters.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field fxFlex="40%">
+            <input matInput placeholder="Last Name" formControlName="lastName" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" class="margin-top flex-spacer">
+        <button mat-raised-button matStepperPrevious color="accent">Back</button>
+        <div *ngIf="userError" class="mat-caption error">
+          {{ userError }}
+        </div>
+        <button mat-raised-button matStepperNext color="accent">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="userForm">
+    <form [formGroup]="userForm" (ngSubmit)="save(userForm)">
+      <ng-template matStepLabel>Review</ng-template>
+      <div class="stepContent">
+        Review and update your user profile.
+        <app-view-user [user]="userForm.value"></app-view-user>
+      </div>
+      <div fxLayout="row" class="margin-top flex-spacer">
+        <button mat-raised-button matStepperPrevious color="accent">Back</button>
+        <div *ngIf="userError" class="mat-caption error">
+          {{ userError }}
+        </div>
+        <button mat-button color="warn" (click)="stepper.reset()">Reset</button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          type="submit"
+          [disabled]="this.userForm.invalid"
+        >
+          Update
+        </button>
+      </div>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -15,9 +14,11 @@ export class HomeComponent implements OnInit {
   role: string;
   ngOnInit() {
     this.authService.authStatus.subscribe(authStatus => {
-      this.displayLogin = authStatus.isAuthenticated;
-      this.username = authStatus.sub;
-      this.role = authStatus.AUTHORITIES[0];
+      if (authStatus.isAuthenticated) {
+        this.displayLogin = authStatus.isAuthenticated;
+        this.username = authStatus.sub;
+        this.role = authStatus.AUTHORITIES[0];
+      }
     });
   }
 

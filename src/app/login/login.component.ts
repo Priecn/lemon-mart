@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { AuthService } from '../auth/auth.service';
 import { Role } from '../auth/role.enum';
 import { UiService } from '../common/ui.service';
@@ -33,10 +32,7 @@ export class LoginComponent implements OnInit {
   private buildLoginForm() {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.minLength(8), Validators.maxLength(50)],
-      ],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -46,6 +42,7 @@ export class LoginComponent implements OnInit {
       .login(submittedForm.value.email, submittedForm.value.password)
       .subscribe(
         authStatus => {
+          console.log(JSON.stringify(authStatus));
           if (authStatus.isAuthenticated) {
             this.router.navigate([
               this.redirectUrl || this.getNavigationUrl(authStatus.role),

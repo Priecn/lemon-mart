@@ -4,8 +4,7 @@ import * as decode from 'jwt-decode';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-
-import { transformError } from '../common/common';
+import { setRole, transformError } from '../common/common';
 import { CacheService } from './cache/cache.service';
 import { Role } from './role.enum';
 
@@ -20,7 +19,7 @@ export interface IAuthStatus {
   exp: number;
 }
 
-interface IServerAuthResponse {
+export interface IServerAuthResponse {
   token: string;
 }
 
@@ -62,12 +61,12 @@ export class AuthService extends CacheService {
 
     const loginResponse = this.authProvider(email, password).pipe(
       map((value: IServerAuthResponse) => {
-        this.setToken(value.token);
+        this.setToken(value);
         return decode(value.token) as IAuthStatus;
       }),
       tap((value: IAuthStatus) => {
         value.isAuthenticated = true;
-        value.role = this.setRole(value.AUTHORITIES[0]);
+        value.role = setRole(value.AUTHORITIES[0]);
       }),
       catchError(transformError)
     );
@@ -87,7 +86,7 @@ export class AuthService extends CacheService {
     this.authStatus.next(defaultAuthStatus);
   }
 
-  private setToken(jwt: string) {
+  private setToken(jwt: IServerAuthResponse) {
     this.setItem('jwt', jwt);
   }
 
@@ -96,23 +95,12 @@ export class AuthService extends CacheService {
   }
 
   getToken(): string {
-    return this.getItem('jwt') || '';
+    return this.getItem<IServerAuthResponse>('jwt')
+      ? this.getItem<IServerAuthResponse>('jwt').token
+      : '';
   }
 
   private clearToken() {
     this.removeItem('jwt');
-  }
-
-  private setRole(authority: string): Role {
-    if (authority.toUpperCase() === 'ROLE_USER') {
-      return Role.User;
-    }
-    if (authority.toUpperCase() === 'ROLE_MANAGER') {
-      return Role.Manager;
-    }
-    if (authority.toUpperCase() === 'ROLE_CASHIER') {
-      return Role.Cashier;
-    }
-    return Role.Clerk;
   }
 }
