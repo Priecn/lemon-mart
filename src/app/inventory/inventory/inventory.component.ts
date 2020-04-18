@@ -13,6 +13,9 @@ import { Component, OnInit } from '@angular/core';
       <a mat-button routerLink="/inventory/products" routerLinkActive="active-link"
         >Products</a
       >
+      <a mat-button routerLink="/inventory/product-table" routerLinkActive="active-link"
+        >Products Table</a
+      >
       <a mat-button routerLink="/inventory/categories" routerLinkActive="active-link"
         >Categories</a
       >
@@ -34,7 +37,7 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class InventoryComponent implements OnInit {
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

@@ -44,12 +44,12 @@ export class UserService extends CacheService {
   }
 
   getUser(username: string): Observable<IUser> {
-    return this.httpClient.get<IUser>(`${environment.baseUrl}/v1/user/${username}`);
+    return this.httpClient.get<IUser>(`${environment.authUrl}/v1/user/${username}`);
   }
 
   getUsers(pageSize: number, searchText = '', pagesToSkip = 0): Observable<IUsers> {
     return this.httpClient
-      .get<IUsers>(`${environment.baseUrl}/v1/users`, {
+      .get<IUsers>(`${environment.authUrl}/v1/users`, {
         params: {
           search: searchText,
           offset: pagesToSkip.toString(),
@@ -67,7 +67,7 @@ export class UserService extends CacheService {
     this.setItem('draft-user', user);
     user.authorities[0] = 'ROLE_' + user.role.toString().toUpperCase();
     const updateResponse = this.httpClient
-      .put<IUser>(`${environment.baseUrl}/v1/user/${user.username}`, user)
+      .put<IUser>(`${environment.authUrl}/v1/user/${user.username}`, user)
       .pipe(
         tap((updatedUser: IUser) => {
           updatedUser.role = setRole(updatedUser.authorities[0]);
@@ -87,7 +87,7 @@ export class UserService extends CacheService {
   addUser(user: IUser): Observable<IUser> {
     this.setItem('draft-user', user);
     const addResponse = this.httpClient
-      .post<IUser>(`${environment.baseUrl}/v1/user`, user)
+      .post<IUser>(`${environment.authUrl}/v1/user`, user)
       .pipe(
         tap((addedUser: IUser) => {
           addedUser.role = setRole(addedUser.authorities[0]);

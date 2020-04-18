@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AuthGuardService } from '../auth/auth-guard/auth-guard.service';
 import { Role } from '../auth/role.enum';
 import { CategoriesComponent } from './categories/categories.component';
-import {
-  InventoryDashboardComponent,
-} from './inventory-dashboard/inventory-dashboard.component';
+import { InventoryDashboardComponent } from './inventory-dashboard/inventory-dashboard.component';
 import { InventoryComponent } from './inventory/inventory.component';
+import { ProductTableComponent } from './product-table/product-table.component';
 import { ProductsComponent } from './products/products.component';
 import { StockEntryComponent } from './stock-entry/stock-entry.component';
+
 
 const routes: Routes = [
   {
@@ -35,6 +34,12 @@ const routes: Routes = [
         data: { expectedRole: Role.Clerk },
       },
       {
+        path: 'product-table',
+        component: ProductTableComponent,
+        canActivate: [AuthGuardService],
+        data: { expectedRole: Role.Clerk },
+      },
+      {
         path: 'categories',
         component: CategoriesComponent,
         canActivate: [AuthGuardService],
@@ -48,4 +53,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class InventoryRoutingModule {}
+export class InventoryRoutingModule { }

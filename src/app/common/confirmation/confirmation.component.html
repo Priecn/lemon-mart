@@ -1,0 +1,18 @@
+<div mat-dialog-content>
+  <h2 class="mat-h2">{{confirmatioMsg}}</h2>
+</div>
+<div mat-dialog-actions>
+  <div fxLayout="row" fxFlex fxLayoutAlign="end" fxLayoutGap="10px">
+    <div>
+      <button mat-raised-button color="primary" (click)="onClickNo()">
+        NO
+      </button>
+    </div>
+    <div>
+      <button mat-raised-button (click)="onClickYes()">
+        YES
+      </button>
+    </div>
+
+  </div>
+</div>

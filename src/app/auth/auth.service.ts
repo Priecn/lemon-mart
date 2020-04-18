@@ -50,7 +50,7 @@ export class AuthService extends CacheService {
     email: string,
     password: string
   ): Observable<IServerAuthResponse> {
-    return this.http.post<IServerAuthResponse>(`${environment.baseUrl}/v1/login`, {
+    return this.http.post<IServerAuthResponse>(`${environment.authUrl}/v1/login`, {
       email,
       password,
     });

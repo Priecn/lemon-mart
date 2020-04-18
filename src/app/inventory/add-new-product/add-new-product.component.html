@@ -1,0 +1,49 @@
+<form [formGroup]="productForm" (ngSubmit)="addProduct()">
+    <div mat-dialog-content>
+      <h2 class="mat-h2">Add New Product</h2>
+        <input type="hidden" formControlName="id" />
+        <mat-form-field>
+          <input matInput placeholder="Product name" formControlName="name" required>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Generic name" formControlName="genericName" required>
+        </mat-form-field>
+        <mat-form-field>
+          <input type="text" placeholder="Category Name" matInput formControlName="category" [matAutocomplete]="category">
+          <mat-autocomplete autoActiveFirstOption #category="matAutocomplete">
+            <mat-option (onSelectionChange)="categorySelected($event, category)" *ngFor="let category of filteredCategories | async" [value]="category.name">
+              <span *ngIf="category.id === null">Adding new Category: </span>{{category.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Company Name" formControlName="companyName" required>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Product Type</mat-label>
+            <mat-select required formControlName="productType" [compareWith]="compareProductTypes">
+              <mat-option (onSelectionChange)="typeSelected($event, type)" *ngFor="let type of productTypes" [value]="type" >{{type.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="unit">
+            <input matInput placeholder="Pack Quantity" formControlName="quantityInAPack" required>
+        </mat-form-field>{{unit}}
+        <div formGroupName="taxInfo">
+          <mat-form-field>
+            <input matInput placeholder="HSN" formControlName="hsn">
+          </mat-form-field>
+          <mat-form-field>
+              <input matInput placeholder="GST" formControlName="gst">
+          </mat-form-field>
+        </div>
+        <mat-form-field>
+            <input matInput placeholder="location" formControlName="location">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button [disabled]="productForm.invalid" type="submit" mat-raised-button color="primary">
+        Add Product
+      </button>
+    </div>
+</form>
+

@@ -44,8 +44,10 @@ export class LoginComponent implements OnInit {
         authStatus => {
           console.log(JSON.stringify(authStatus));
           if (authStatus.isAuthenticated) {
+            console.log(this.redirectUrl);
+            console.log(this.getNavigationUrl(authStatus.role));
             this.router.navigate([
-              this.redirectUrl || this.getNavigationUrl(authStatus.role),
+              this.getNavigationUrl(authStatus.role)
             ]);
             this.uiService.showToast(
               `Hi, ${authStatus.sub}! (${authStatus.AUTHORITIES[0].split('_')[1]})`
